@@ -1,13 +1,12 @@
 from fastapi import FastAPI
 
-app = FastAPI()
+from .routers import router_utilisateurs , router_commandes, router_details_commande, router_pizzas
 
+app = FastAPI(
+    title="Pizzas tech",
+)
 
-@app.get("/")
-async def root():
-    return {"message": "Bienvenue sur PizzaTech API"}
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+app.include_router(router_utilisateurs.router)
+app.include_router(router_pizzas.router)
+app.include_router(router_commandes.router)
+app.include_router(router_details_commande.router)
