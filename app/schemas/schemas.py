@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from enum import Enum
+from typing import Optional
 
 
 # === ENUMS ===
@@ -27,6 +28,12 @@ class UtilisateurCreate(UtilisateurBase):
 
 class UtilisateurRead(UtilisateurBase):
     id: int
+
+class UtilisateurUpdate(BaseModel):
+    nom: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    role: Optional[RoleEnum] = None
 
     class Config:
         orm_mode = True
