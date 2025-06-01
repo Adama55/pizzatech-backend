@@ -4,7 +4,7 @@ import pytest
 from fastapi.exceptions import HTTPException
 
 def test_read_pizzas(client, mock_db):
-    """Test GET /pizzas/ - Liste toutes les pizzas"""
+    """Test GET /api/pizzas/ - Liste toutes les pizzas"""
     # Arrange
     mock_pizza1 = Mock()
     mock_pizza1.id = 1
@@ -23,7 +23,7 @@ def test_read_pizzas(client, mock_db):
     mock_db.query.return_value.all.return_value = [mock_pizza1, mock_pizza2]
 
     # Act
-    response = client.get("/pizzas/")
+    response = client.get("/api/pizzas/")
 
     # Assert
     assert response.status_code == status.HTTP_200_OK
@@ -33,7 +33,7 @@ def test_read_pizzas(client, mock_db):
     assert resultats[1]["prix"] == 12.99
 
 def test_read_pizza(client, mock_db):
-    """Test GET /pizzas/{id} - Récupère une pizza spécifique"""
+    """Test GET /api/pizzas/{id} - Récupère une pizza spécifique"""
     # Arrange
     mock_pizza = Mock()
     mock_pizza.id = 1
@@ -45,7 +45,7 @@ def test_read_pizza(client, mock_db):
     mock_db.query.return_value.filter.return_value.first.return_value = mock_pizza
 
     # Act
-    response = client.get("/pizzas/1")
+    response = client.get("/api/pizzas/1")
 
     # Assert
     assert response.status_code == status.HTTP_200_OK
@@ -54,19 +54,19 @@ def test_read_pizza(client, mock_db):
     assert resultat["nom"] == "Pizza Margherita"
 
 def test_read_pizza_non_trouve(client, mock_db):
-    """Test GET /pizzas/{id} - Pizza non trouvée"""
+    """Test GET /api/pizzas/{id} - Pizza non trouvée"""
     # Arrange
     mock_db.query.return_value.filter.return_value.first.return_value = None
 
     # Act
-    response = client.get("/pizzas/999")
+    response = client.get("/api/pizzas/999")
 
     # Assert
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert "Pizza non trouvée" in response.json()["detail"]
 
 def test_create_pizza(client, mock_db):
-    """Test POST /pizzas/ - Crée une nouvelle pizza"""
+    """Test POST /api/pizzas/ - Crée une nouvelle pizza"""
     data_pizza = {
         "nom": "Nouvelle Pizza",
         "prix": 14.99,
@@ -89,7 +89,7 @@ def test_create_pizza(client, mock_db):
     mock_db.refresh.side_effect = lambda x: setattr(x, 'id', 1)
 
     # Act
-    response = client.post("/pizzas/", json=data_pizza)
+    response = client.post("/api/pizzas/", json=data_pizza)
 
     # Assert
     assert response.status_code == status.HTTP_201_CREATED
@@ -100,7 +100,7 @@ def test_create_pizza(client, mock_db):
     mock_db.commit.assert_called_once()
 
 def test_update_pizza(client, mock_db):
-    """Test PUT /pizzas/{id} - Met à jour une pizza existante"""
+    """Test PUT /api/pizzas/{id} - Met à jour une pizza existante"""
     id_pizza = 1
     data_update = {
         "nom": "Pizza Mise à Jour",
@@ -121,7 +121,7 @@ def test_update_pizza(client, mock_db):
     mock_db.query.return_value.filter.return_value.first.return_value = mock_pizza
 
     # Act
-    response = client.put(f"/pizzas/{id_pizza}", json=data_update)
+    response = client.put(f"/api/pizzas/{id_pizza}", json=data_update)
 
     # Assert
     assert response.status_code == status.HTTP_200_OK
@@ -131,24 +131,24 @@ def test_update_pizza(client, mock_db):
     mock_db.commit.assert_called_once()
 
 def test_update_pizza_non_trouve(client, mock_db):
-    """Test PUT /pizzas/{id} - Pizza non trouvée"""
+    """Test PUT /api/pizzas/{id} - Pizza non trouvée"""
     data_update = {"nom": "Nouvelle Pizza"}
     mock_db.query.return_value.filter.return_value.first.return_value = None
 
     # Act
-    response = client.put("/pizzas/999", json=data_update)
+    response = client.put("/api/pizzas/999", json=data_update)
 
     # Assert
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 def test_delete_pizza(client, mock_db):
-    """Test DELETE /pizzas/{id} - Supprime une pizza"""
+    """Test DELETE /api/pizzas/{id} - Supprime une pizza"""
     mock_pizza = Mock()
     mock_pizza.id = 1
     mock_db.query.return_value.filter.return_value.first.return_value = mock_pizza
 
     # Act
-    response = client.delete("/pizzas/1")
+    response = client.delete("/api/pizzas/1")
 
     # Assert
     assert response.status_code == status.HTTP_200_OK
@@ -156,11 +156,11 @@ def test_delete_pizza(client, mock_db):
     mock_db.commit.assert_called_once()
 
 def test_delete_pizza_non_trouve(client, mock_db):
-    """Test DELETE /pizzas/{id} - Pizza non trouvée"""
+    """Test DELETE /api/pizzas/{id} - Pizza non trouvée"""
     mock_db.query.return_value.filter.return_value.first.return_value = None
 
     # Act
-    response = client.delete("/pizzas/999")
+    response = client.delete("/api/pizzas/999")
 
     # Assert
     assert response.status_code == status.HTTP_404_NOT_FOUND

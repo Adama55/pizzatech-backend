@@ -14,7 +14,7 @@ from app.services.service_commandes import (
 )
 
 router = APIRouter(
-    prefix="/commandes",
+    prefix="/api/commandes",
     tags=["commandes"]
 )
 

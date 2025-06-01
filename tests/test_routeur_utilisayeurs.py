@@ -6,7 +6,7 @@ from fastapi.exceptions import HTTPException
 # Tests pour les routes utilisateurs
 
 def test_read_utilisateurs(client, mock_db):
-    """Test GET /utilisateurs/ - Liste tous les utilisateurs"""
+    """Test GET /api/utilisateurs/ - Liste tous les utilisateurs"""
     # Arrange - Crée des mocks qui ressemblent à vos modèles
     mock_utilisateur1 = Mock()
     mock_utilisateur1.id = 1
@@ -25,7 +25,7 @@ def test_read_utilisateurs(client, mock_db):
     mock_db.query.return_value.all.return_value = [mock_utilisateur1, mock_utilisateur2]
 
     # Act
-    response = client.get("/utilisateurs/")
+    response = client.get("/api/utilisateurs/")
 
     # Assert
     assert response.status_code == status.HTTP_200_OK
@@ -35,7 +35,7 @@ def test_read_utilisateurs(client, mock_db):
     assert resultats[1]["email"] == "utilisateur2@example.com"
 
 def test_read_utilisateur(client, mock_db):
-    """Test GET /utilisateurs/{id} - Récupère un utilisateur spécifique"""
+    """Test GET /api/utilisateurs/{id} - Récupère un utilisateur spécifique"""
     # Arrange
     mock_utilisateur = Mock()
     mock_utilisateur.id = 1
@@ -46,7 +46,7 @@ def test_read_utilisateur(client, mock_db):
     mock_db.query.return_value.filter.return_value.first.return_value = mock_utilisateur
 
     # Act
-    response = client.get("/utilisateurs/1")
+    response = client.get("/api/utilisateurs/1")
 
     # Assert
     assert response.status_code == status.HTTP_200_OK
@@ -55,19 +55,19 @@ def test_read_utilisateur(client, mock_db):
     assert resultat["nom"] == "Test Utilisateur"
 
 def test_read_utilisateur_non_trouve(client, mock_db):
-    """Test GET /utilisateurs/{id} - Utilisateur non trouvé"""
+    """Test GET /api/utilisateurs/{id} - Utilisateur non trouvé"""
     # Arrange
     mock_db.query.return_value.filter.return_value.first.return_value = None
 
     # Act
-    response = client.get("/utilisateurs/999")
+    response = client.get("/api/utilisateurs/999")
 
     # Assert
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert "Utilisateur non trouvé" in response.json()["detail"]
 
 def test_create_utilisateur(client, mock_db):
-    """Test POST /utilisateurs/ - Crée un nouvel utilisateur"""
+    """Test POST /api/utilisateurs/ - Crée un nouvel utilisateur"""
     data_utilisateur = {
         "nom": "Nouvel Utilisateur",
         "email": "nouveau@example.com",
@@ -90,7 +90,7 @@ def test_create_utilisateur(client, mock_db):
     mock_db.refresh.side_effect = lambda x: setattr(x, 'id', 1)
 
     # Act
-    response = client.post("/utilisateurs/", json=data_utilisateur)
+    response = client.post("/api/utilisateurs/", json=data_utilisateur)
 
     # Assert
     assert response.status_code == status.HTTP_201_CREATED
@@ -101,7 +101,7 @@ def test_create_utilisateur(client, mock_db):
     mock_db.commit.assert_called_once()
 
 def test_update_utilisateur(client, mock_db):
-    """Test PUT /utilisateurs/{id} - Met à jour un utilisateur existant"""
+    """Test PUT /api/utilisateurs/{id} - Met à jour un utilisateur existant"""
     id_utilisateur = 1
     data_update = {
         "nom": "Nom Mis à Jour",
@@ -119,7 +119,7 @@ def test_update_utilisateur(client, mock_db):
     mock_db.query.return_value.filter.return_value.first.return_value = mock_utilisateur
 
     # Act
-    response = client.put(f"/utilisateurs/{id_utilisateur}", json=data_update)
+    response = client.put(f"/api/utilisateurs/{id_utilisateur}", json=data_update)
 
     # Assert
     assert response.status_code == status.HTTP_200_OK
@@ -129,24 +129,24 @@ def test_update_utilisateur(client, mock_db):
     mock_db.commit.assert_called_once()
 
 def test_update_utilisateur_non_trouve(client, mock_db):
-    """Test PUT /utilisateurs/{id} - Utilisateur non trouvé"""
+    """Test PUT /api/utilisateurs/{id} - Utilisateur non trouvé"""
     data_update = {"nom": "Nouveau Nom"}
     mock_db.query.return_value.filter.return_value.first.return_value = None
 
     # Act
-    response = client.put("/utilisateurs/999", json=data_update)
+    response = client.put("/api/utilisateurs/999", json=data_update)
 
     # Assert
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 def test_delete_utilisateur(client, mock_db):
-    """Test DELETE /utilisateurs/{id} - Supprime un utilisateur"""
+    """Test DELETE /api/utilisateurs/{id} - Supprime un utilisateur"""
     mock_utilisateur = Mock()
     mock_utilisateur.id = 1
     mock_db.query.return_value.filter.return_value.first.return_value = mock_utilisateur
 
     # Act
-    response = client.delete("/utilisateurs/1")
+    response = client.delete("/api/utilisateurs/1")
 
     # Assert
     assert response.status_code == status.HTTP_200_OK
@@ -154,18 +154,18 @@ def test_delete_utilisateur(client, mock_db):
     mock_db.commit.assert_called_once()
 
 def test_delete_utilisateur_non_trouve(client, mock_db):
-    """Test DELETE /utilisateurs/{id} - Utilisateur non trouvé"""
+    """Test DELETE /api/utilisateurs/{id} - Utilisateur non trouvé"""
     mock_db.query.return_value.filter.return_value.first.return_value = None
 
     # Act
-    response = client.delete("/utilisateurs/999")
+    response = client.delete("/api/utilisateurs/999")
 
     # Assert
     assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 def test_create_utilisateur_validation(client):
-    """Test POST /utilisateurs/ - Validation des données d'entrée"""
+    """Test POST /api/utilisateurs/ - Validation des données d'entrée"""
     # Arrange
     data_invalide = {
         "nom": "Nouvel Utilisateur",
@@ -175,7 +175,7 @@ def test_create_utilisateur_validation(client):
     }
 
     # Act
-    response = client.post("/utilisateurs/", json=data_invalide)
+    response = client.post("/api/utilisateurs/", json=data_invalide)
 
     # Assert
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY

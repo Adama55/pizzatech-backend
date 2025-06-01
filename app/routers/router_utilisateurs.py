@@ -8,7 +8,7 @@ from app.services.service_utilisateurs import get_all_utilisateurs, NotFoundExce
     create_utilisateur, update_utilisateur_ser, remove_utilisateur
 
 router = APIRouter(
-    prefix='/utilisateurs',
+    prefix='/api/utilisateurs',
     tags=["utilisateurs"]
 )
 

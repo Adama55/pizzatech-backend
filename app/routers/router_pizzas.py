@@ -14,7 +14,7 @@ from app.services.service_piazza import (
 )
 
 router = APIRouter(
-    prefix="/pizzas",
+    prefix="/api/pizzas",
     tags=["pizzas"]
 )
 
