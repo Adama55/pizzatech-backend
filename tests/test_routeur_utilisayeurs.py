@@ -162,3 +162,20 @@ def test_delete_utilisateur_non_trouve(client, mock_db):
 
     # Assert
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_create_utilisateur_validation(client):
+    """Test POST /utilisateurs/ - Validation des données d'entrée"""
+    # Arrange
+    data_invalide = {
+        "nom": "Nouvel Utilisateur",
+        "email": "email_invalide",  # Email invalide
+        "password": "123",  # Mot de passe trop court
+        "role": "client"
+    }
+
+    # Act
+    response = client.post("/utilisateurs/", json=data_invalide)
+
+    # Assert
+    assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
