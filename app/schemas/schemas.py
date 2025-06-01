@@ -53,6 +53,12 @@ class PizzaCreate(PizzaBase):
 class PizzaRead(PizzaBase):
     id: int
 
+class PizzaUpdate(BaseModel):
+    nom: Optional[str] = None
+    description: Optional[str] = None
+    prix: Optional[float] = None
+    image_url: Optional[str] = None
+
     class Config:
         orm_mode = True
 
@@ -60,6 +66,7 @@ class PizzaRead(PizzaBase):
 # === DETAILS DE COMMANDE ===
 
 class DetailCommandeBase(BaseModel):
+    commande_id : int
     pizza_id: int
     quantite: int
     prix_unitaire: float
@@ -69,6 +76,9 @@ class DetailCommandeCreate(DetailCommandeBase):
 
 class DetailCommandeRead(DetailCommandeBase):
     id: int
+
+class DetailsCommandeUpdate(BaseModel):
+    quantite: Optional[int] = None
 
     class Config:
         orm_mode = True
@@ -88,5 +98,12 @@ class CommandeRead(CommandeBase):
     utilisateur: Optional[UtilisateurRead]
     details: List[DetailCommandeRead] = []
 
+class CommandeUpdate(BaseModel):
+    utilisateur_id: Optional[int] = None
+    statut: Optional[StatutEnum] = None
+
     class Config:
         orm_mode = True
+
+class CommandeDelete(CommandeBase):
+    id: int
