@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.models.models import Utilisateur
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
+from app.utils.security_utils import hash_password
 
 from app.schemas.schemas import UtilisateurUpdate
 
@@ -23,6 +24,10 @@ def get_utilisateur_by_id(db: Session, user_id: int):
     return utilisateur
 
 def create_utilisateur(db: Session, utilisateur_data: dict):
+    # Hacher le mot de passe avant de créer l'utilisateur
+    if 'password' in utilisateur_data:
+        utilisateur_data['password'] = hash_password(utilisateur_data['password'])
+
     utilisateur = Utilisateur(**utilisateur_data)
     try:
         db.add(utilisateur)
@@ -43,6 +48,7 @@ def create_utilisateur(db: Session, utilisateur_data: dict):
             detail="Erreur lors de la création de l'utilisateur."
         )
     return utilisateur
+
 
 def update_utilisateur_ser(db: Session, utilisateur_id: int, utilisateur_data: UtilisateurUpdate):
     utilisateur = db.query(Utilisateur).filter(Utilisateur.id == utilisateur_id).first()

@@ -32,8 +32,20 @@ class UtilisateurRead(UtilisateurBase):
 class UtilisateurUpdate(BaseModel):
     nom: Optional[str] = None
     email: Optional[EmailStr] = None
-    password: Optional[str] = None
     role: Optional[RoleEnum] = None
+
+class UtilisateurSignup(BaseModel):
+    nom: str
+    email: EmailStr
+    password: str
+    role: str = "client"
+
+class UtilisateurLogin(BaseModel):
+    email: EmailStr
+    password: str
+class UtilisateurInDB(BaseModel):
+    email: EmailStr
+    role: str
 
     class Config:
         orm_mode = True
