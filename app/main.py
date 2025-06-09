@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-
+from app.models.models import Base
+from .db.database import engine
 from .routers import router_utilisateurs , router_commandes, router_details_commande, router_pizzas, router_compte
 
+Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Pizzas Tech",
     description="Pizzas Tech est une API RESTful conçue"
