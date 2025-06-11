@@ -7,7 +7,7 @@ from fastapi.exceptions import HTTPException
 
 def test_read_utilisateurs(client, mock_db):
     """Test GET /api/utilisateurs/ - Liste tous les utilisateurs"""
-    # Arrange - Crée des mocks qui ressemblent à vos modèles
+    # Arrange
     mock_utilisateur1 = Mock()
     mock_utilisateur1.id = 1
     mock_utilisateur1.nom = "Utilisateur 1"
