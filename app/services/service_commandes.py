@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from app.models.models import Commande, DetailsCommande, Pizza, Utilisateur
-from app.schemas.schemas import CommandeCreate, CommandeUpdate  # on ajoutera CommandeUpdate
+from app.models.models import Commande, DetailsCommande
+from app.schemas.schemas import CommandeCreate, CommandeUpdate
 from sqlalchemy.exc import IntegrityError
 
 class NotFoundException(Exception):
