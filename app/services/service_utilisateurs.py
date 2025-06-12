@@ -24,7 +24,7 @@ def get_utilisateur_by_id(db: Session, user_id: int):
     return utilisateur
 
 def create_utilisateur(db: Session, utilisateur_data: dict):
-    # Hacher le mot de passe avant de créer l'utilisateur
+
     if 'password' in utilisateur_data:
         utilisateur_data['password'] = hash_password(utilisateur_data['password'])
 
@@ -35,14 +35,12 @@ def create_utilisateur(db: Session, utilisateur_data: dict):
         db.refresh(utilisateur)
     except IntegrityError as e:
         db.rollback()
-        # Par exemple, email déjà utilisé
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Un utilisateur avec cet email existe déjà."
         )
     except Exception as e:
         db.rollback()
-        # Erreur générique
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Erreur lors de la création de l'utilisateur."
